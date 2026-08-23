@@ -2,15 +2,37 @@
 
 **Admin Console** — Secure dashboard for moderating users, economy, and Steam syncing.
 
-Part of the [ComputerPets](https://github.com/RicheyWorks/computerpets) ecosystem. Index: [computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem).
+Part of [ComputerPets](https://github.com/RicheyWorks/computerpets). Map: [computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem).
 
-> Status: **design scaffold**. This repository ships the contract, README, and layout so implementation can start without renaming the organ later.
+| | |
+| --- | --- |
+| Status | Design scaffold — contract frozen, implementation next |
+| License | MIT |
+| First pet | Still [Rui on the desktop](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md). This organ is optional. |
 
-## Why it exists
+## The job
 
 Operators, not players. Ban, freeze listings, replay a Steam ticket, and see whether the overlay fleet is healthy.
 
 The flagship overlay already puts a living sticker on the real desktop (Rui first, 210 kinds). Console does not replace that. It is one organ.
+
+## Who uses it
+
+Operators only. RBAC. Not linked from Companion.
+
+## What it is not
+
+Not a player dashboard. Not a place to mint yourself a legendary.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  operator --> console
+  console --> steamgate
+  console --> ledger
+  console --> bounty
+```
 
 ## Stack
 
@@ -18,14 +40,6 @@ TypeScript · React 19 · Vite · Spring Boot admin API · Steam sync status · 
 
 GroupId / namespace: `com.enterprisepet.console`  
 Default listen: `8080`
-
-## Talks to
-
-- computerpets Spring backend
-- computerpets-steamgate
-- computerpets-ledger
-- computerpets-telemetry
-- computerpets-bounty
 
 ## Contract
 
@@ -43,6 +57,28 @@ Default listen: `8080`
 ### Failure doctrine
 
 Missing admin role → 403, empty shell. Steam outage → show stale with banner. Accidental freeze → 15-minute undo window.
+
+## First slice
+
+Build this and stop. Do not boil the ocean.
+
+**User search + freeze that halts Bazaar and Visitation. Undo window 15 minutes.**
+
+You know it works when: Missing role: 403 empty shell. Steam outage: stale banner, no fake 'synced'.
+
+## Environment
+
+`ADMIN_OIDC`, `STEAMGATE_URL`, `LEDGER_URL`
+
+Never commit secrets. Never put Steam or chain keys in the overlay.
+
+## Neighbors
+
+- computerpets Spring backend
+- computerpets-steamgate
+- computerpets-ledger
+- computerpets-telemetry
+- computerpets-bounty
 
 ## Layout
 
@@ -64,13 +100,12 @@ cd app; npm install; npm run dev
 
 You do not need this service to meet Rui. The [flagship start-here](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md) is still the first pet.
 
-## Ecosystem
+## Links
 
-| Organ | Repo |
-| --- | --- |
-| Flagship desktop + Spring | [RicheyWorks/computerpets](https://github.com/RicheyWorks/computerpets) |
-| This organ | [RicheyWorks/computerpets-console](https://github.com/RicheyWorks/computerpets-console) |
-| Full map | [RicheyWorks/computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem) |
+- Flagship: [RicheyWorks/computerpets](https://github.com/RicheyWorks/computerpets)
+- This repo: [RicheyWorks/computerpets-console](https://github.com/RicheyWorks/computerpets-console)
+- Map: [RicheyWorks/computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem)
+- Contract file: [docs/CONTRACT.md](docs/CONTRACT.md)
 
 ## License
 
