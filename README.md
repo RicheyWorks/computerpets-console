@@ -1,30 +1,37 @@
 # Console
 
-**Admin Console** — Secure dashboard for moderating users, economy, and Steam syncing.
+**A clearer operating view of ComputerPets.**
 
-Part of [ComputerPets](https://github.com/RicheyWorks/computerpets). Map: [computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem).
+A planned operator dashboard for user moderation, economy alerts, and Steam synchronization status, with role-based access.
 
-| | |
+**Stage: design scaffold.** This checkout contains a design document and a source placeholder. The experience below is planned; there is no runnable app or integrated service yet.
+
+[Status](#status) · [Planned experience](#planned-experience) · [Contributor quickstart](#contributor-quickstart) · [Service contract](docs/CONTRACT.md) · [Ecosystem map](https://github.com/RicheyWorks/computerpets-ecosystem)
+
+## Status
+
+| Available today | What you can inspect |
 | --- | --- |
-| Status | Design scaffold — contract frozen, implementation next |
-| License | MIT |
-| First pet | Still [Rui on the desktop](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md). This organ is optional. |
+| [Service contract](docs/CONTRACT.md) | Intended behavior, boundaries, and planned dependencies. |
+| [Source placeholder](src/console/index.ts) | Name metadata only; no package.json, app, or runtime is checked in. |
+| [MIT license](LICENSE) | Licensing terms for the repository. |
 
-## The job
+Gameplay, endpoints, integration arrows, and failure handling on this page describe implementation targets. No build/test harness, CI workflow, or product screenshots are included in this scaffold.
 
-Operators, not players. Ban, freeze listings, replay a Steam ticket, and see whether the overlay fleet is healthy.
+## Planned experience
 
-The flagship overlay already puts a living sticker on the real desktop (Rui first, 210 kinds). Console does not replace that. It is one organ.
+- GET /admin/users — search, flags, Steam id
+- POST /admin/users/{id}/freeze — halt trades + overlay cloud sync
+- GET /admin/steam/sync — ticket backlog
+- GET /admin/economy/anomalies — ledger alerts
 
-## Who uses it
+### Planned technology
 
-Operators only. RBAC. Not linked from Companion.
+TypeScript · React 19 · Vite · Spring Boot admin API · Steam sync status · RBAC
 
-## What it is not
+### Planned connections
 
-Not a player dashboard. Not a place to mint yourself a legendary.
-
-## Architecture
+These arrows show intended dependencies, rather than working integrations.
 
 ```mermaid
 flowchart LR
@@ -34,83 +41,48 @@ flowchart LR
   console --> bounty
 ```
 
-## Stack
+## Contributor quickstart
 
-TypeScript · React 19 · Vite · Spring Boot admin API · Steam sync status · RBAC
+With access to this private repository, Git and PowerShell are enough to review the scaffold:
 
-GroupId / namespace: `com.enterprisepet.console`  
-Default listen: `8080`
+```powershell
+git clone https://github.com/RicheyWorks/computerpets-console.git
+Set-Location computerpets-console
+Get-Content docs/CONTRACT.md
+Get-Content src/console/index.ts
+```
 
-## Contract
+Read [Service contract](docs/CONTRACT.md) before choosing implementation details. The commands above inspect the checked-in files; app installation, editor launch, and server startup become possible after a buildable project and entry point are added.
 
-### Data
-
-`Operator(role) · Freeze(userId, reason, until) · SteamTicket(id, status)`
-
-### Surface
-
-- GET /admin/users — search, flags, Steam id
-- POST /admin/users/{id}/freeze — halt trades + overlay cloud sync
-- GET /admin/steam/sync — ticket backlog
-- GET /admin/economy/anomalies — ledger alerts
-
-### Failure doctrine
-
-Missing admin role → 403, empty shell. Steam outage → show stale with banner. Accidental freeze → 15-minute undo window.
-
-## First slice
-
-Build this and stop. Do not boil the ocean.
+### First implementation target
 
 **User search + freeze that halts Bazaar and Visitation. Undo window 15 minutes.**
 
 You know it works when: Missing role: 403 empty shell. Steam outage: stale banner, no fake 'synced'.
 
-## Environment
+Treat this as an acceptance target for a future implementation. Start with the documented slice, add the required project setup and focused tests, and update these instructions with commands that work from a fresh clone.
 
-`ADMIN_OIDC`, `STEAMGATE_URL`, `LEDGER_URL`
+## Design boundaries
 
-Never commit secrets. Never put Steam or chain keys in the overlay.
+- Stay canon with 210 species. No illegal hybrids. No swapped voices.
+- Treat the desktop overlay as the main quest. This organ is optional until wired.
+- Fail soft: the overlay keeps walking if this service is down, unless this *is* the overlay.
+- No PII in public artifacts (Steam id, wallet, home path, webcam frames).
 
-## Neighbors
+**Required failure behavior:**
 
-- computerpets Spring backend
-- computerpets-steamgate
-- computerpets-ledger
-- computerpets-telemetry
-- computerpets-bounty
+Missing admin role → 403, empty shell. Steam outage → show stale with banner. Accidental freeze → 15-minute undo window.
 
-## Layout
+## Ecosystem
 
-```
-computerpets-console/
-  README.md           this file
-  LICENSE             MIT
-  docs/CONTRACT.md    the same contract, frozen for implementers
-  src/                implementation lands here
-```
+- [computerpets](https://github.com/RicheyWorks/computerpets) Spring backend
+- [computerpets-steamgate](https://github.com/RicheyWorks/computerpets-steamgate)
+- [computerpets-ledger](https://github.com/RicheyWorks/computerpets-ledger)
+- [computerpets-telemetry](https://github.com/RicheyWorks/computerpets-telemetry)
+- [computerpets-bounty](https://github.com/RicheyWorks/computerpets-bounty)
 
-## Run (Windows)
-
-PowerShell, from this folder, after the flagship helpers (Git, Node LTS 22+, JDK 21 as needed):
-
-```powershell
-cd app; npm install; npm run dev
-```
-
-You do not need this service to meet Rui. The [flagship start-here](https://github.com/RicheyWorks/computerpets/blob/main/docs/START-HERE.md) is still the first pet.
-
-## Links
-
-- Flagship: [RicheyWorks/computerpets](https://github.com/RicheyWorks/computerpets)
-- This repo: [RicheyWorks/computerpets-console](https://github.com/RicheyWorks/computerpets-console)
-- Map: [RicheyWorks/computerpets-ecosystem](https://github.com/RicheyWorks/computerpets-ecosystem)
-- Contract file: [docs/CONTRACT.md](docs/CONTRACT.md)
+Start with the [ComputerPets flagship](https://github.com/RicheyWorks/computerpets) for the desktop pet. This repository describes an optional extension; the [ecosystem map](https://github.com/RicheyWorks/computerpets-ecosystem) explains the broader plan.
 
 ## License
 
 MIT. See [LICENSE](LICENSE).
-
----
-
-*Two hundred ten living kinds. Keep them so a line does not go quiet.*
